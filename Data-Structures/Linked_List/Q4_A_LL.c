@@ -86,7 +86,7 @@ int main()
 
 void moveEvenItemsToBack(LinkedList *ll)
 {
-		if (ll == NULL)
+	if (ll == NULL)
     {
         return;
     }
