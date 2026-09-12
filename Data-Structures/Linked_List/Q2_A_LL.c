@@ -103,7 +103,29 @@ int main()
 
 void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2)
 {
-    /* add your code here */
+	if (ll1 == NULL || ll2 == NULL)
+	{
+		return;
+	}
+
+	// ll1의 원래 크기를 기억하고 루프 횟수 제한
+	int count = ll1->size;
+	int index = 1;
+
+	while (count > 0 && ll2->head != NULL)
+	{
+		// 삽입 성공 여부 확인(-1이면 실패)
+		if (insertNode(ll1, index, ll2->head->item) != -1)
+		{
+			removeNode(ll2, 0);
+			index += 2;
+			count--;
+		}
+		else
+		{
+			break;
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
