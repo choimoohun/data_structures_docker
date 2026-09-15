@@ -34,7 +34,7 @@ typedef struct stack
 ///////////////////////// function prototypes ////////////////////////////////////
 
 // You should not change the prototypes of these functions
-int balanced(char *expression);
+int balanced(Stack *s, char *expression);
 
 void push(Stack *s, int item);
 int pop(Stack *s);
@@ -84,10 +84,12 @@ int main()
 			scanf("%s", str);
 			break;
         case 2:
-            if(balanced(str))
+            if(balanced(&s, str))
                 printf("not balanced!\n");
             else
                 printf("balanced!\n");
+			// 끝나면 스택을 초기화
+			removeAllItemsFromStack(&s);
 			break;
 		case 0:
 			break;
@@ -102,9 +104,48 @@ int main()
 }
 
 ////////////////////////////////////////////////////////////
-int balanced(char *expression)
+// main 함수에 이미 스택이 있길래 매개변수를 바꿨음
+int balanced(Stack *s, char *expression)
 {
-/* add your code here */
+	char *ptr = expression;
+
+	// 문자열을 그대로 순회
+	while (*ptr)
+	{
+		// 여는 괄호는 push
+		if (*ptr == '(' || *ptr == '[' || *ptr == '{')
+		{
+			push(s, *ptr);
+		}
+		// 비어있지 않으면 짝을 검사
+		else if (!isEmptyStack(s))
+		{
+			char open = peek(s);
+			switch (*ptr)
+			{
+			case ')':
+				if (open == '(') pop(s);
+				else return -1;
+				break;
+			case ']':
+				if (open == '[') pop(s);
+				else return -1;
+				break;
+			case '}':
+				if (open == '{') pop(s);
+				else return -1;
+				break;
+			}
+		}
+		// 아무것도 만족 못하면 바로 탈출
+		else
+		{
+			return -1;
+		}
+		ptr++;
+	}
+	
+	return !isEmptyStack(s);
 }
 
 ////////////////////////////////////////////////////////////
