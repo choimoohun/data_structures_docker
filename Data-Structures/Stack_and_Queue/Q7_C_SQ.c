@@ -107,45 +107,20 @@ int main()
 // main 함수에 이미 스택이 있길래 매개변수를 바꿨음
 int balanced(Stack *s, char *expression)
 {
-	char *ptr = expression;
+	for (; *expression; expression++)
+    {
+        // 1. 여는 괄호면 짝이 될 '닫는 괄호'를 미리 스택에 푸시
+        if (*expression == '(')      push(s, ')');
+        else if (*expression == '[') push(s, ']');
+        else if (*expression == '{') push(s, '}');
+        
+        // 2. 닫는 괄호면 pop한 결과가 현재 문자와 같은지만 1줄로 검사
+        else if (isEmptyStack(s) || pop(s) != *expression)
+            return -1;
+    }
 
-	// 문자열을 그대로 순회
-	while (*ptr)
-	{
-		// 여는 괄호는 push
-		if (*ptr == '(' || *ptr == '[' || *ptr == '{')
-		{
-			push(s, *ptr);
-		}
-		// 비어있지 않으면 짝을 검사
-		else if (!isEmptyStack(s))
-		{
-			char open = peek(s);
-			switch (*ptr)
-			{
-			case ')':
-				if (open == '(') pop(s);
-				else return -1;
-				break;
-			case ']':
-				if (open == '[') pop(s);
-				else return -1;
-				break;
-			case '}':
-				if (open == '{') pop(s);
-				else return -1;
-				break;
-			}
-		}
-		// 아무것도 만족 못하면 바로 탈출
-		else
-		{
-			return -1;
-		}
-		ptr++;
-	}
-	
-	return !isEmptyStack(s);
+    // 모든 괄호가 털리고 스택이 비어 있으면 0(균형), 남아있으면 1(불균형)
+    return !isEmptyStack(s);
 }
 
 ////////////////////////////////////////////////////////////
